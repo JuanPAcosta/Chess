@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./src/Styles/styles.css" />
+        <title>Mowse Chess</title>
+        <link rel="icon" type="image/x-icon" href="./src/Assets/Logos/M-logo.png" />
+    </head>
+    <body>
+        <header class="header-container">
+            <ul class="header-content">
+                <li class="header-navbar-image">
+                    <img src="./src/Assets/Logos/Chess-logo.png" alt="Mowse-logo" title="Web page logo" />
+                </li>
+                <li class="page-title">
+                    <h1>Mowse Chess</h1>
+                </li>
+                <li>
+                    <nav class="header-navbar">
+                        <a href="">Login</a>
+                        <a href="">Settings</a>
+                    </nav>
+                </li>
+            </ul>
+        </header>
+        <main class="main-container">
+            <section class="turns-section">
+                <div class="card-container">
+                    <div class="turn-card">
+                        <button class="forfeit-button forfeit-black">Forfeit</button>
+                        <img src="./src/Assets/Images/c1-b-pawn.png" alt="Black pawn image" title="Black pawn image" />
+                        <div class="time-left">
+                            <div id="time-black">
+                                <span class="minutes minutes-black">3</span>
+                                <span class="time-split">:</span>
+                                <span class="seconds seconds-black">00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-container">
+                    <div class="turn-card white-turn">
+                        <button class="forfeit-button forfeit-white">Forfeit</button>
+                        <img src="./src/Assets/Images/c1-w-pawn.png" alt="White pawn image" title="White pawn image" />
+                        <div class="time-left">
+                            <div id="time-white">
+                                <span class="minutes minutes-white">3</span>
+                                <span class="time-split">:</span>
+                                <span class="seconds seconds-white">00</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="game-section">
+                <div class="game-container">
+                    <div class="score">
+                        <div id="black-score">
+                            Black Score
+                            <span class="pieces-score"></span>
+                            <span class="number-score"></span>
+                        </div>
+                    </div>
+                    <div class="board">
+                        <div class="row vector-8">
+                            <div id="A8" class="white-square board-1-w">
+                                <img
+                                    class="b-rook piece black-piece castling"
+                                    src="./src/Assets/Images/c1-b-rook.png"
+                                    alt="black-rook"
+                                />
+                            </div>
+                            <div id="B8" class="black-square board-1-b">
+                                <img
+                                    class="b-horse piece black-piece"
+                                    src="./src/Assets/Images/c1-b-horse.png"
+                                    alt="black-horse"
+                                />
+                            </div>
+                            <div id="C8" class="white-square board-1-w">
+                                <img
+                                    class="b-bishop piece black-piece"
+                                    src="./src/Assets/Images/c1-b-bishop.png"
+                                    alt="black-bishop"
+                                />
+                            </div>
+                            <div id="D8" class="black-square board-1-b">
+                                <img
+                                    class="b-queen piece black-piece"
+                                    src="./src/Assets/Images/c1-b-queen.png"
+                                    alt="black-queen"
+                                />
+                            </div>
+                            <div id="E8" class="white-square board-1-w">
+                                <img
+                                    class="b-king piece black-piece castling"
+                                    src="./src/Assets/Images/c1-b-king.png"
+                                    alt="black-king"
+                                />
+                            </div>
+                            <div id="F8" class="black-square board-1-b">
+                                <img
+                                    class="b-bishop piece black-piece"
+                                    src="./src/Assets/Images/c1-b-bishop.png"
+                                    alt="black-bishop"
+                                />
+                            </div>
+                            <div id="G8" class="white-square board-1-w">
+                                <img
+                                    class="b-horse piece black-piece"
+                                    src="./src/Assets/Images/c1-b-horse.png"
+                                    alt="black-horse"
+                                />
+                            </div>
+                            <div id="H8" class="black-square board-1-b">
+                                <img
+                                    class="b-rook piece black-piece castling"
+                                    src="./src/Assets/Images/c1-b-rook.png"
+                                    alt="black-rook"
+                                />
+                            </div>
+                        </div>
+                        <div class="row vector-7">
+                            <div id="A7" class="black-square board-1-b">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="B7" class="white-square board-1-w">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="C7" class="black-square board-1-b">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="D7" class="white-square board-1-w">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="E7" class="black-square board-1-b">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="F7" class="white-square board-1-w">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="G7" class="black-square board-1-b">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                            <div id="H7" class="white-square board-1-w">
+                                <img
+                                    class="b-pawn piece black-piece"
+                                    src="./src/Assets/Images/c1-b-pawn.png"
+                                    alt="black-pawn"
+                                />
+                            </div>
+                        </div>
+                        <div class="row vector-6">
+                            <div id="A6" class="white-square board-1-w"></div>
+                            <div id="B6" class="black-square board-1-b"></div>
+                            <div id="C6" class="white-square board-1-w"></div>
+                            <div id="D6" class="black-square board-1-b"></div>
+                            <div id="E6" class="white-square board-1-w"></div>
+                            <div id="F6" class="black-square board-1-b"></div>
+                            <div id="G6" class="white-square board-1-w"></div>
+                            <div id="H6" class="black-square board-1-b"></div>
+                        </div>
+
+                        <div class="row vector-5">
+                            <div id="A5" class="black-square board-1-b"></div>
+                            <div id="B5" class="white-square board-1-w"></div>
+                            <div id="C5" class="black-square board-1-b"></div>
+                            <div id="D5" class="white-square board-1-w"></div>
+                            <div id="E5" class="black-square board-1-b"></div>
+                            <div id="F5" class="white-square board-1-w"></div>
+                            <div id="G5" class="black-square board-1-b"></div>
+                            <div id="H5" class="white-square board-1-w"></div>
+                        </div>
+                        <div class="row vector-4">
+                            <div id="A4" class="white-square board-1-w"></div>
+                            <div id="B4" class="black-square board-1-b"></div>
+                            <div id="C4" class="white-square board-1-w"></div>
+                            <div id="D4" class="black-square board-1-b"></div>
+                            <div id="E4" class="white-square board-1-w"></div>
+                            <div id="F4" class="black-square board-1-b"></div>
+                            <div id="G4" class="white-square board-1-w"></div>
+                            <div id="H4" class="black-square board-1-b"></div>
+                        </div>
+                        <div class="row vector-3">
+                            <div id="A3" class="black-square board-1-b"></div>
+                            <div id="B3" class="white-square board-1-w"></div>
+                            <div id="C3" class="black-square board-1-b"></div>
+                            <div id="D3" class="white-square board-1-w"></div>
+                            <div id="E3" class="black-square board-1-b"></div>
+                            <div id="F3" class="white-square board-1-w"></div>
+                            <div id="G3" class="black-square board-1-b"></div>
+                            <div id="H3" class="white-square board-1-w"></div>
+                        </div>
+                        <div class="row vector-2">
+                            <div id="A2" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="B2" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="C2" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="D2" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="E2" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="F2" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="G2" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                            <div id="H2" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-pawn piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-pawn.png"
+                                    alt="white-pawn"
+                                />
+                            </div>
+                        </div>
+                        <div class="row vector-1">
+                            <div id="A1" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-rook piece white-piece castling white-turn"
+                                    src="./src/Assets/Images/c1-w-rook.png"
+                                    alt="white-rook"
+                                />
+                            </div>
+                            <div id="B1" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-horse piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-horse.png"
+                                    alt="white-horse"
+                                />
+                            </div>
+                            <div id="C1" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-bishop piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-bishop.png"
+                                    alt="white-bishop"
+                                />
+                            </div>
+                            <div id="D1" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-queen piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-queen.png"
+                                    alt="white-queen"
+                                />
+                            </div>
+                            <div id="E1" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-king piece white-piece castling white-turn"
+                                    src="./src/Assets/Images/c1-w-king.png"
+                                    alt="white-king"
+                                />
+                            </div>
+                            <div id="F1" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-bishop piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-bishop.png"
+                                    alt="white-bishop"
+                                />
+                            </div>
+                            <div id="G1" class="black-square board-1-b white-turn">
+                                <img
+                                    class="w-horse piece white-piece white-turn"
+                                    src="./src/Assets/Images/c1-w-horse.png"
+                                    alt="white-horse"
+                                />
+                            </div>
+                            <div id="H1" class="white-square board-1-w white-turn">
+                                <img
+                                    class="w-rook piece white-piece castling white-turn"
+                                    src="./src/Assets/Images/c1-w-rook.png"
+                                    alt="white-rook"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score">
+                        <div id="white-score">
+                            White Score
+                            <span class="pieces-score"></span>
+                            <span class="number-score"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="moves-section">
+                <span>Table of Moves</span>
+                <div class="current-moves"></div>
+            </section>
+            <section class="select-section hidden">
+                <div class="selection-card w-selection hidden">
+                    <span class="selection-title">New piece</span>
+                    <div class="new-pieces-selector">
+                        <div id="new-w-queen" class="new-piece">
+                            <img
+                                class="w-queen piece white-piece"
+                                src="./src/Assets/Images/c1-w-queen.png"
+                                alt="new-white-queen"
+                            />
+                        </div>
+                        <div id="new-w-horse" class="new-piece">
+                            <img
+                                class="w-horse piece white-piece"
+                                src="./src/Assets/Images/c1-w-horse.png"
+                                alt="new-white-horse"
+                            />
+                        </div>
+                        <div id="new-w-rook" class="new-piece">
+                            <img
+                                class="w-rook piece white-piece"
+                                src="./src/Assets/Images/c1-w-rook.png"
+                                alt="new-white-rook"
+                            />
+                        </div>
+                        <div id="new-w-bishop" class="new-piece">
+                            <img
+                                class="w-bishop piece white-piece"
+                                src="./src/Assets/Images/c1-w-bishop.png"
+                                alt="new-white-bishop"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="selection-card b-selection hidden">
+                    <span class="selection-title">New piece</span>
+                    <div class="new-pieces-selector">
+                        <div id="new-b-queen" class="new-piece">
+                            <img
+                                class="b-queen piece black-piece"
+                                src="./src/Assets/Images/c1-b-queen.png"
+                                alt="new-black-queen"
+                            />
+                        </div>
+                        <div id="new-b-horse" class="new-piece">
+                            <img
+                                class="b-horse piece black-piece"
+                                src="./src/Assets/Images/c1-b-horse.png"
+                                alt="new-black-horse"
+                            />
+                        </div>
+                        <div id="new-b-rook" class="new-piece">
+                            <img
+                                class="b-rook piece black-piece"
+                                src="./src/Assets/Images/c1-b-rook.png"
+                                alt="new-black-rook"
+                            />
+                        </div>
+                        <div id="new-b-bishop" class="new-piece">
+                            <img
+                                class="b-bishop piece black-piece"
+                                src="./src/Assets/Images/c1-b-bishop.png"
+                                alt="new-black-bishop"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="select-section game-over-section hidden">
+                <div id="white-wins" class="game-over-card hidden">
+                    <div class="game-over-message">
+                        <span>Game Over</span>
+                        <span>White Wins !!!</span>
+                    </div>
+                    <a href="">Play Again</a>
+                </div>
+                <div id="black-wins" class="game-over-card hidden">
+                    <div class="game-over-message">
+                        <span>Game Over</span>
+                        <span>Black Wins !!!</span>
+                    </div>
+                    <a href="">Play Again</a>
+                </div>
+            </section>
+        </main>
+        <footer class="footer-container">
+            <section class="select-color-section">
+                <span>Piece Color</span>
+                <div class="select-color-container">
+                    <div class="row-color-picker">
+                        <div class="color-picker c1 recolor">
+                            <img src="./src/Assets/Images/c1-b-pawn.png" alt="recolor-1-b" />
+                            <img src="./src/Assets/Images/c1-w-pawn.png" alt="recolor-1-w" />
+                        </div>
+                        <div class="color-picker c2 recolor">
+                            <img src="./src/Assets/Images/c2-b-pawn.png" alt="recolor-2-b" />
+                            <img src="./src/Assets/Images/c2-w-pawn.png" alt="recolor-2-w" />
+                        </div>
+                        <div class="color-picker c3 recolor">
+                            <img src="./src/Assets/Images/c3-b-pawn.png" alt="recolor-3-b" />
+                            <img src="./src/Assets/Images/c3-w-pawn.png" alt="recolor-3-w" />
+                        </div>
+                    </div>
+                    <div class="row-color-picker">
+                        <div class="color-picker c4 recolor">
+                            <img src="./src/Assets/Images/c4-b-pawn.png" alt="recolor-4-b" />
+                            <img src="./src/Assets/Images/c4-w-pawn.png" alt="recolor-4-w" />
+                        </div>
+                        <div class="color-picker c5 recolor">
+                            <img src="./src/Assets/Images/c5-b-pawn.png" alt="recolor-5-b" />
+                            <img src="./src/Assets/Images/c5-w-pawn.png" alt="recolor-5-w" />
+                        </div>
+                        <div class="color-picker c6 recolor">
+                            <img src="./src/Assets/Images/c6-b-pawn.png" alt="recolor-6-b" />
+                            <img src="./src/Assets/Images/c6-w-pawn.png" alt="recolor-6-w" />
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="select-color-section">
+                <span>Board Color</span>
+                <div class="select-color-container">
+                    <div class="row-color-picker">
+                        <div class="color-picker recolor-board">
+                            <div class="double-color-board board-1-b"></div>
+                            <div class="double-color-board board-1-w"></div>
+                        </div>
+                        <div class="color-picker recolor-board">
+                            <div class="double-color-board board-2-b"></div>
+                            <div class="double-color-board board-2-w"></div>
+                        </div>
+                        <div class="color-picker recolor-board">
+                            <div class="double-color-board board-3-b"></div>
+                            <div class="double-color-board board-3-w"></div>
+                        </div>
+                    </div>
+                    <div class="row-color-picker">
+                        <div class="color-picker recolor-board">
+                            <div class="double-color-board board-4-b"></div>
+                            <div class="double-color-board board-4-w"></div>
+                        </div>
+                        <div class="color-picker recolor-board">
+                            <div class="double-color-board board-5-b"></div>
+                            <div class="double-color-board board-5-w"></div>
+                        </div>
+                        <div class="color-picker recolor-board">
+                            <div class="double-color-board board-6-b"></div>
+                            <div class="double-color-board board-6-w"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </footer>
+        <script src="./src/js/index.js"></script>
+    </body>
+</html>
