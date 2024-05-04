@@ -1,4 +1,4 @@
-/*Font import*/
+/*------- Font import*/
 
 @font-face {
     font-display: swap;
@@ -15,24 +15,23 @@
     font-weight: 400;
     src: url("../Assets/Fonts/aclonica-v22-latin-regular.woff2") format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
-/*Root constants*/
+
+/*------- Root constants*/
 
 :root {
     --light-black: #464646;
     --button-text: #b8b8b8;
-    --hopspital-green: #abd9b2;
     --blue-dark: #006df0;
     --blue-soft: #78b9eb;
     --black-dark: #111;
     --black-soft: #222;
-    --razer-green: #44d62c;
-    --black: black;
-    --white: white;
     --gray: #888;
     --sf: 14px;
     --mf: 16px;
     --lf: 18px;
 }
+
+/*------- Body main styles*/
 
 body {
     font-family: "Roboto", sans-serif;
@@ -49,7 +48,7 @@ body {
     user-select: none;
 }
 
-/*Header container styles*/
+/*------- Header container styles*/
 
 .header-content {
     list-style-type: none;
@@ -63,6 +62,13 @@ body {
     background-color: var(--light-black);
 }
 
+/*Header-navbar*/
+
+.page-title {
+    font-size: var(--lf);
+    text-transform: uppercase;
+}
+
 .header-navbar-image {
     display: flex;
 }
@@ -71,11 +77,6 @@ body {
     width: 120px;
     padding: 6px;
     border-radius: 40px;
-}
-
-.page-title {
-    font-size: var(--lf);
-    text-transform: uppercase;
 }
 
 .header-navbar {
@@ -96,7 +97,7 @@ body {
     color: var(--blue-soft);
 }
 
-/*Main container styles*/
+/*------- Main container styles*/
 
 .main-container {
     width: 100%;
@@ -105,7 +106,7 @@ body {
     grid-template-columns: 20% 60% 20%;
 }
 
-/*Main-turns-section*/
+/*Card-turns*/
 
 .turns-section {
     margin: 0px 16px;
@@ -133,6 +134,13 @@ body {
     opacity: 0.3;
 }
 
+.turn-card img {
+    width: 100px;
+    height: 100px;
+}
+
+/*forfeit-buttons*/
+
 .forfeit-button {
     font-family: "Aclonica", sans-serif;
     font-size: 1.5em;
@@ -149,10 +157,7 @@ body {
     cursor: pointer;
 }
 
-.turn-card img {
-    width: 100px;
-    height: 100px;
-}
+/*timers*/
 
 .time-left {
     font-family: "Aclonica", sans-serif;
@@ -175,7 +180,7 @@ body {
     justify-content: space-evenly;
 }
 
-/*Main-game-section*/
+/*Game-section*/
 
 .game-container {
     display: flex;
@@ -377,7 +382,7 @@ body {
     font-size: xx-large;
 }
 
-/*Main-moves-section*/
+/*Moves-section*/
 
 .moves-section {
     background-color: var(--black-soft);
@@ -425,22 +430,20 @@ body {
     align-items: center;
 }
 
-/* width */
+/*scrollbar-styles*/
 .current-moves::-webkit-scrollbar {
     width: 10px;
 }
 
-/* Track */
 .current-moves::-webkit-scrollbar-track {
     background: rgba(46, 46, 48, 0.938);
 }
 
-/* Handle */
 .current-moves::-webkit-scrollbar-thumb {
     background: var(--black-dark);
 }
 
-/*Footer container styles*/
+/*------- Footer container styles*/
 
 .footer-container {
     margin-top: 16px;
@@ -514,6 +517,8 @@ body {
     width: 50%;
     height: 100%;
 }
+
+/*Boards-options-recolor*/
 
 .board-1-b {
     background-color: rgb(119, 78, 25);

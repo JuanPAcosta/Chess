@@ -1,3 +1,4 @@
+//Call all the variables that we are going to use
 const forfeitButton = document.getElementsByClassName("forfeit-button");
 const turnCard = document.getElementsByClassName("turn-card");
 const minutes = document.getElementsByClassName("minutes");
@@ -6,10 +7,12 @@ var totalPieces = document.getElementsByClassName("piece");
 var whitePiecesList = document.getElementsByClassName("white-piece");
 var blackPiecesList = document.getElementsByClassName("black-piece");
 
+//Define variables for the timers and the pieces that each player has eaten
 var whiteTimer, blackTimer;
 var whiteScore = [];
 var blackScore = [];
 
+//Asign the event to each botton to end the game if they forfeit
 for (let element of forfeitButton) {
     element.addEventListener("click", (event) => {
         let playerForfeit = event.target.classList[1];
@@ -18,42 +21,50 @@ for (let element of forfeitButton) {
     });
 }
 
+//Start the cicle to find the posible moves with the piece that is being dragged
 for (let element of totalPieces) {
     element.addEventListener("dragstart", manageMove);
 }
 
+//Manage the type of move depending on the piece (pawn/horse/bishop ...)
 function manageMove() {
     var pieceMoved = this.classList[0];
 
     switch (pieceMoved) {
         case "w-pawn":
         case "b-pawn":
+            //Moves forward and eat diagonal
             movePawn(this);
             break;
 
         case "w-horse":
         case "b-horse":
+            //Moves on L shape
             moveHorse(this);
             break;
 
         case "w-bishop":
         case "b-bishop":
+            //Moves diagonal
             moveDiagonal(this);
             break;
 
         case "w-rook":
         case "b-rook":
+            //Moves Left-Right-Top-Bottom
             moveStraight(this);
             break;
 
         case "w-queen":
         case "b-queen":
+            //Moves diagonal and Left-Right-Top-Bottom
             moveDiagonal(this);
             moveStraight(this);
             break;
 
         case "w-king":
         case "b-king":
+            //Moves diagonal and Left-Right-Top-Bottom and checks if castle is possible
             moveDiagonal(this);
             moveStraight(this);
             moveCastle(this);
@@ -64,12 +75,14 @@ function manageMove() {
     }
 }
 
+//Define the move for any Pawn on the board
 function movePawn(currentPiece) {
     var pieceName = currentPiece.classList[0];
     var currentColumn = currentPiece.parentNode.id.charAt(0);
     var currentRow = currentPiece.parentNode.id.charAt(1);
     var nextRow, pawnLimit, pawnFirstRow, pawnDoubleMove, piecesToEat;
 
+    //Define the enemy pieces and the constants to evaluate the possible moves
     if (pieceName == "w-pawn") {
         nextRow = Number(currentRow) + 1;
         pawnLimit = 8;
@@ -84,12 +97,15 @@ function movePawn(currentPiece) {
         piecesToEat = "white-piece";
     }
 
+    //Evaluate the move for the pawn if the pawn is not on the end of the board
     if (Number(currentRow) != pawnLimit) {
         var positionsToEvaluate = [];
         var nextSquare = document.getElementById(`${currentColumn}${nextRow}`);
 
+        //Evaluates the move forward if the next square is empty
         if (nextSquare.childElementCount == 0) {
             positionsToEvaluate.push(nextSquare);
+            //Evaluate double move if is the first move of the pawn
             if (currentRow == pawnFirstRow) {
                 nextSquare = document.getElementById(`${currentColumn}${pawnDoubleMove}`);
                 if (nextSquare.childElementCount == 0) {
@@ -98,6 +114,7 @@ function movePawn(currentPiece) {
             }
         }
 
+        //Evaluate the eating move if theres an enemy on the diagonal Top-Left / Bottom-Left (for blacks)
         if (currentColumn != "A") {
             var leftColumn = String.fromCharCode(currentColumn.charCodeAt() - 1);
             nextSquare = document.getElementById(`${leftColumn}${nextRow}`);
@@ -107,6 +124,7 @@ function movePawn(currentPiece) {
             }
         }
 
+        //Evaluate the eating move if theres an enemy on the diagonal Top-Right / Bottom-Left (for blacks)
         if (currentColumn != "H") {
             var rightColumn = String.fromCharCode(currentColumn.charCodeAt() + 1);
             nextSquare = document.getElementById(`${rightColumn}${nextRow}`);
@@ -115,10 +133,12 @@ function movePawn(currentPiece) {
             }
         }
 
+        //Send the possible moves to enable them
         movePiece(positionsToEvaluate, currentPiece);
     }
 }
 
+//Define the move for any Horse on the board
 function moveHorse(currentPiece) {
     var pieceName = currentPiece.classList[0];
     var currentColumn = currentPiece.parentNode.id.charAt(0);
@@ -126,15 +146,18 @@ function moveHorse(currentPiece) {
     var columnToEvaluate, rowToEvaluate, piecesToEat, nextSquare;
     var positionsToEvaluate = [];
 
+    //Define the enemy pieces
     if (pieceName == "w-horse") {
         piecesToEat = "black-piece";
     } else if (pieceName == "b-horse") {
         piecesToEat = "white-piece";
     }
 
+    //Evaluate the L shape move on directions Top-Left / Top-Right
     if (Number(currentRow) <= 6) {
         rowToEvaluate = Number(currentRow) + 2;
 
+        //Top-Left
         if (currentColumn != "A") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() - 1);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -144,6 +167,7 @@ function moveHorse(currentPiece) {
             }
         }
 
+        //Top-Right
         if (currentColumn != "H") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() + 1);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -154,9 +178,11 @@ function moveHorse(currentPiece) {
         }
     }
 
+    //Evaluate the L shape move on directions Bottom-Left / Bottom-Right
     if (Number(currentRow) >= 3) {
         rowToEvaluate = Number(currentRow) - 2;
 
+        //Bottom-Left
         if (currentColumn != "A") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() - 1);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -166,6 +192,7 @@ function moveHorse(currentPiece) {
             }
         }
 
+        //Bottom-Right
         if (currentColumn != "H") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() + 1);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -176,9 +203,11 @@ function moveHorse(currentPiece) {
         }
     }
 
+    //Evaluate the L shape move on directions Left-Bottom / Right-Bottom
     if (Number(currentRow) != 1) {
         rowToEvaluate = Number(currentRow) - 1;
 
+        //Left-Bottom
         if (currentColumn >= "C") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() - 2);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -188,6 +217,7 @@ function moveHorse(currentPiece) {
             }
         }
 
+        //Right-Bottom
         if (currentColumn <= "F") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() + 2);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -198,9 +228,11 @@ function moveHorse(currentPiece) {
         }
     }
 
+    //Evaluate the L shape move on directions Left-Top / Right-Top
     if (Number(currentRow) != 8) {
         rowToEvaluate = Number(currentRow) + 1;
 
+        //Left-Top
         if (currentColumn >= "C") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() - 2);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -210,6 +242,7 @@ function moveHorse(currentPiece) {
             }
         }
 
+        //Right-Top
         if (currentColumn <= "F") {
             columnToEvaluate = String.fromCharCode(currentColumn.charCodeAt() + 2);
             nextSquare = document.getElementById(`${columnToEvaluate}${rowToEvaluate}`);
@@ -220,11 +253,13 @@ function moveHorse(currentPiece) {
         }
     }
 
+    //Send the possible moves to enable them
     if (positionsToEvaluate.length > 0) {
         movePiece(positionsToEvaluate, currentPiece);
     }
 }
 
+//Define the move for any Bishop - Queen/diagonal - King/diagonal on the board
 function moveDiagonal(currentPiece) {
     var pieceName = currentPiece.classList[0];
     var currentColumn = currentPiece.parentNode.id.charAt(0);
@@ -232,13 +267,16 @@ function moveDiagonal(currentPiece) {
     var piecesToEat, lastSquare, lastSquareColumn, lastSquareRow, kingColumn, kingRow, nextSquare;
     var positionsToEvaluate = [];
 
+    //Define the enemy pieces
     if (pieceName == "w-bishop" || pieceName == "w-queen" || pieceName == "w-king") {
         piecesToEat = "black-piece";
     } else if (pieceName == "b-bishop" || pieceName == "b-queen" || pieceName == "b-king") {
         piecesToEat = "white-piece";
     }
 
+    //Evaluate the diagonal move on directions Top-Left
     if (currentColumn != "A" && currentRow != 8) {
+        //Evaluate the diagonal move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt() - 1);
             kingRow = Number(currentRow) + 1;
@@ -248,10 +286,12 @@ function moveDiagonal(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the diagonal move for the Bishop/Queen for all the adjacent squares
             lastSquare = recursiveDiagonal("topLeft", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Top-Left)
             while (lastSquareColumn != currentColumn) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt() + 1);
@@ -260,7 +300,9 @@ function moveDiagonal(currentPiece) {
         }
     }
 
+    //Evaluate the diagonal move on directions Top-Right
     if (currentColumn != "H" && currentRow != 8) {
+        //Evaluate the diagonal move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt() + 1);
             kingRow = Number(currentRow) + 1;
@@ -270,10 +312,12 @@ function moveDiagonal(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the diagonal move for the Bishop/Queen for all the adjacent squares
             lastSquare = recursiveDiagonal("topRight", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Top-Right)
             while (lastSquareColumn != currentColumn) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt() - 1);
@@ -282,7 +326,9 @@ function moveDiagonal(currentPiece) {
         }
     }
 
+    //Evaluate the diagonal move on directions Bottom-Left
     if (currentColumn != "A" && currentRow != 1) {
+        //Evaluate the diagonal move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt() - 1);
             kingRow = Number(currentRow) - 1;
@@ -292,10 +338,12 @@ function moveDiagonal(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the diagonal move for the Bishop/Queen for all the adjacent squares
             lastSquare = recursiveDiagonal("bottomLeft", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Bottom-Left)
             while (lastSquareColumn != currentColumn) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt() + 1);
@@ -304,7 +352,9 @@ function moveDiagonal(currentPiece) {
         }
     }
 
+    //Evaluate the diagonal move on directions Bottom-Right
     if (currentColumn != "H" && currentRow != 1) {
+        //Evaluate the diagonal move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt() + 1);
             kingRow = Number(currentRow) - 1;
@@ -314,10 +364,12 @@ function moveDiagonal(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the diagonal move for the Bishop/Queen for all the adjacent squares
             lastSquare = recursiveDiagonal("bottomRight", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Bottom-Right)
             while (lastSquareColumn != currentColumn) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt() - 1);
@@ -326,16 +378,20 @@ function moveDiagonal(currentPiece) {
         }
     }
 
+    //Send the possible moves to enable them
     if (positionsToEvaluate.length > 0) {
         movePiece(positionsToEvaluate, currentPiece);
     }
 }
 
+//Recursive function to keep evaluating the diagonal and stop if he finds a piece
 function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesToEat) {
     var nextSquare;
 
+    //Evaluates each diagonal posible (Top-Left / Top-Right / Bottom-Left / Bottom-Right)
     switch (evaluateDiagonal) {
         case "topLeft":
+            //If the function is on the left border || top border (Stops Top-Left evaluation)
             if (currentColumn == "A" || currentRow == 8) {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -345,6 +401,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow) + 1;
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -359,6 +416,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             break;
 
         case "topRight":
+            //If the function is on the right border || top border (Stops Top-Right evaluation)
             if (currentColumn == "H" || currentRow == 8) {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -368,6 +426,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow) + 1;
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -381,6 +440,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             break;
 
         case "bottomLeft":
+            //If the function is on the left border || bottom border (Stops Bottom-Left evaluation)
             if (currentColumn == "A" || currentRow == 1) {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -390,6 +450,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow) - 1;
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -403,6 +464,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             break;
 
         case "bottomRight":
+            //If the function is on the right border || bottom border (Stops Bottom-Right evaluation)
             if (currentColumn == "H" || currentRow == 1) {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -412,6 +474,7 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow) - 1;
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -428,9 +491,11 @@ function recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesTo
             break;
     }
 
+    //Keeps evaluating diagonal until it finds a piece or the border of the board
     return recursiveDiagonal(evaluateDiagonal, currentColumn, currentRow, piecesToEat);
 }
 
+//Define the move for any Rook - Queen/straight - King/straight on the board
 function moveStraight(currentPiece) {
     var pieceName = currentPiece.classList[0];
     var currentColumn = currentPiece.parentNode.id.charAt(0);
@@ -438,13 +503,16 @@ function moveStraight(currentPiece) {
     var piecesToEat, lastSquare, lastSquareColumn, lastSquareRow, kingColumn, kingRow, nextSquare;
     var positionsToEvaluate = [];
 
+    //Define the enemy pieces
     if (pieceName == "w-rook" || pieceName == "w-queen" || pieceName == "w-king") {
         piecesToEat = "black-piece";
     } else if (pieceName == "b-rook" || pieceName == "b-queen" || pieceName == "b-king") {
         piecesToEat = "white-piece";
     }
 
+    //Evaluate the straight move on direction Left
     if (currentColumn != "A") {
+        //Evaluate the straight move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt() - 1);
             kingRow = Number(currentRow);
@@ -454,10 +522,12 @@ function moveStraight(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the straight move for the Rook/Queen for all the adjacent squares
             lastSquare = recursiveStraight("left", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Left)
             while (lastSquareColumn != currentColumn) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt() + 1);
@@ -466,7 +536,9 @@ function moveStraight(currentPiece) {
         }
     }
 
+    //Evaluate the straight move on direction Right
     if (currentColumn != "H") {
+        //Evaluate the straight move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt() + 1);
             kingRow = Number(currentRow);
@@ -476,10 +548,12 @@ function moveStraight(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the straight move for the Rook/Queen for all the adjacent squares
             lastSquare = recursiveStraight("right", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Right)
             while (lastSquareColumn != currentColumn) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt() - 1);
@@ -488,7 +562,9 @@ function moveStraight(currentPiece) {
         }
     }
 
+    //Evaluate the straight move on direction Top
     if (Number(currentRow) != 8) {
+        //Evaluate the straight move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt());
             kingRow = Number(currentRow) + 1;
@@ -498,10 +574,12 @@ function moveStraight(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the straight move for the Rook/Queen for all the adjacent squares
             lastSquare = recursiveStraight("top", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Top)
             while (lastSquareRow != currentRow) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt());
@@ -510,7 +588,9 @@ function moveStraight(currentPiece) {
         }
     }
 
+    //Evaluate the straight move on direction Bottom
     if (Number(currentRow) != 1) {
+        //Evaluate the straight move for the King for next adjacent square
         if (pieceName == "w-king" || pieceName == "b-king") {
             kingColumn = String.fromCharCode(currentColumn.charCodeAt());
             kingRow = Number(currentRow) - 1;
@@ -520,10 +600,12 @@ function moveStraight(currentPiece) {
                 positionsToEvaluate.push(nextSquare);
             }
         } else {
+            //Evaluate the straight move for the Rook/Queen for all the adjacent squares
             lastSquare = recursiveStraight("bottom", currentColumn, currentRow, piecesToEat);
             lastSquareColumn = lastSquare.id.charAt(0);
             lastSquareRow = lastSquare.id.charAt(1);
 
+            //Adds all the posible squares to the posible moves (Top)
             while (lastSquareRow != currentRow) {
                 positionsToEvaluate.push(document.getElementById(`${lastSquareColumn}${lastSquareRow}`));
                 lastSquareColumn = String.fromCharCode(lastSquareColumn.charCodeAt());
@@ -532,16 +614,20 @@ function moveStraight(currentPiece) {
         }
     }
 
+    //Send the possible moves to enable them
     if (positionsToEvaluate.length > 0) {
         movePiece(positionsToEvaluate, currentPiece);
     }
 }
 
+//Recursive function to keep evaluating the straight move and stop if he finds a piece
 function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesToEat) {
     var nextSquare;
 
+    //Evaluates each straight line posible (Left / Right / Top / Bottom)
     switch (evaluateStraight) {
         case "left":
+            //If the function is on the left border (Stops Left evaluation)
             if (currentColumn == "A") {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -551,6 +637,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow);
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -565,6 +652,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             break;
 
         case "right":
+            //If the function is on the right border (Stops Right evaluation)
             if (currentColumn == "H") {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -574,6 +662,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow);
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -588,6 +677,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             break;
 
         case "top":
+            //If the function is on the top border (Stops Top evaluation)
             if (Number(currentRow) == 8) {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -597,6 +687,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow) + 1;
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -611,6 +702,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             break;
 
         case "bottom":
+            //If the function is on the bottom border (Stops Bottom evaluation)
             if (Number(currentRow) == 1) {
                 nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
                 return nextSquare;
@@ -620,6 +712,7 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             currentRow = Number(currentRow) - 1;
             nextSquare = document.getElementById(`${currentColumn}${currentRow}`);
 
+            //Returns the last square if it finds a piece
             if (nextSquare.childElementCount != 0) {
                 if (nextSquare.firstElementChild.classList.contains(piecesToEat)) {
                     return nextSquare;
@@ -637,15 +730,18 @@ function recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesTo
             break;
     }
 
+    //Keeps evaluating straight lines until it finds a piece or the border of the board
     return recursiveStraight(evaluateStraight, currentColumn, currentRow, piecesToEat);
 }
 
+//Define the move for Castle if its still possible in the game (King -> Rook)
 function moveCastle(currentPiece) {
     var pieceName = currentPiece.classList[0];
     var currentRow = currentPiece.parentNode.id.charAt(1);
     var firstSpace, secondSpace, thirdSpace, shortCastle, longCastle;
     var positionsToEvaluate = [];
 
+    //Define enemy pieces
     if (pieceName == "w-king") {
         shortCastle = document.getElementById("H1");
         longCastle = document.getElementById("A1");
@@ -656,6 +752,7 @@ function moveCastle(currentPiece) {
         piecesToEat = "white-piece";
     }
 
+    //Evaluate if is possible to Short castle or Long castle
     if (currentPiece.classList.contains("castling")) {
         if (shortCastle.childElementCount != 0 && shortCastle.firstElementChild.classList.contains("castling")) {
             firstSpace = document.getElementById(`${"F"}${currentRow}`);
@@ -681,11 +778,13 @@ function moveCastle(currentPiece) {
         }
     }
 
+    //Send the possible moves to enable them
     if (positionsToEvaluate.length > 0) {
         movePiece(positionsToEvaluate, currentPiece);
     }
 }
 
+//Evaluate if the next square is empty or determine if the piece found is enemy or ally
 function evaluateSpace(nextSquare, piecesToEat) {
     if (nextSquare.childElementCount == 0) {
         return true;
@@ -695,19 +794,23 @@ function evaluateSpace(nextSquare, piecesToEat) {
     return false;
 }
 
+//Enables the squares with the possible moves to be able to drop the piece moved
 function movePiece(posibleMoves, pieceMoved) {
     for (let element of posibleMoves) {
         element.classList.add("dropzone");
         pieceMoved.classList.add("moveAvailable");
 
+        //Default event to enable drop event
         element.addEventListener("dragover", (event) => {
             event.preventDefault();
         });
 
+        //Enable every square required to drop
         element.addEventListener("drop", (event) => {
             event.preventDefault();
 
             if (element.classList.contains("dropzone") && pieceMoved.classList.contains("moveAvailable")) {
+                //Moves the piece if the square selected is empty
                 if (element.childElementCount == 0) {
                     pieceMoved.parentNode.removeChild(pieceMoved);
                     element.appendChild(pieceMoved);
@@ -717,6 +820,7 @@ function movePiece(posibleMoves, pieceMoved) {
                         pieceMoved.classList.contains("castling") &&
                         element.firstElementChild.classList.contains("castling")
                     ) {
+                        //Moves the piece if the player is trying to short castle or long castle
                         if (element.id.charAt(0) == "H") {
                             let currentRow = pieceMoved.parentNode.id.charAt(1);
                             var rookSquare = document.getElementById(`${"F"}${currentRow}`);
@@ -729,10 +833,12 @@ function movePiece(posibleMoves, pieceMoved) {
                             var typeOfCastle = "longCastle";
                         }
 
+                        //Register the move to show the last move on the screen
                         registerMove(element, typeOfCastle);
                         rookSquare.appendChild(element.firstElementChild);
                         kingSquare.appendChild(pieceMoved);
                     } else {
+                        //Moves the piece, Eats with the King and register the move
                         let pieceToEat = element.firstElementChild;
                         manageScore(pieceToEat, false);
                         element.removeChild(pieceToEat);
@@ -740,6 +846,7 @@ function movePiece(posibleMoves, pieceMoved) {
                         element.appendChild(pieceMoved);
                         registerMove(element, "eat");
 
+                        //If the piece eaten was the enemy King / Triggers - Game is over
                         if (pieceToEat.classList[0] == "w-king" || pieceToEat.classList[0] == "b-king") {
                             let loser = pieceToEat.classList[2];
                             loser = loser.replace("-piece", "");
@@ -748,6 +855,7 @@ function movePiece(posibleMoves, pieceMoved) {
                         }
                     }
                 } else {
+                    //Moves the piece, Eats with the piece moved (Pawn - Horse - Bishop - Rook - Queen) and register the move
                     let pieceToEat = element.firstElementChild;
                     manageScore(pieceToEat, false);
                     element.removeChild(pieceToEat);
@@ -755,6 +863,7 @@ function movePiece(posibleMoves, pieceMoved) {
                     element.appendChild(pieceMoved);
                     registerMove(element, "eat");
 
+                    //If the piece eaten was the enemy King / Triggers - Game is over
                     if (pieceToEat.classList[0] == "w-king" || pieceToEat.classList[0] == "b-king") {
                         let loser = pieceToEat.classList[2];
                         loser = loser.replace("-piece", "");
@@ -762,16 +871,20 @@ function movePiece(posibleMoves, pieceMoved) {
                     }
                 }
 
+                //If the piece moved was the Rook or the King, removes the possibility of Castle move from that piece
                 pieceMoved.classList.remove("castling");
 
+                //Once the piece was moved disable all the squares to prepare for the next turn
                 for (let element of posibleMoves) {
                     element.classList.remove("dropzone");
                 }
 
+                //If any pawn reaches the end of the board, allow to choose new Piece (Rook - Horse - Queen - Bishop)
                 if (pieceMoved.classList.contains("w-pawn") || pieceMoved.classList.contains("b-pawn")) {
                     if (element.id.charAt(1) == 8 || element.id.charAt(1) == 1) {
                         let pieceToEat = element.firstElementChild;
 
+                        //Show the section to choose the new piece
                         if (pieceToEat.classList[0] != "w-king" || pieceToEat.classList[0] != "b-king") {
                             let pieceColor = element.firstElementChild.classList[0].charAt(0);
                             var newPiece = document.getElementsByClassName(`${pieceColor}${"-selection"}`);
@@ -785,6 +898,7 @@ function movePiece(posibleMoves, pieceMoved) {
                             newPieceList.push(document.getElementById(`${"new-"}${pieceColor}${"-rook"}`));
                             newPieceList.push(document.getElementById(`${"new-"}${pieceColor}${"-bishop"}`));
 
+                            //Clone the piece to add it and replace it for the Pawn and manage the score
                             for (let piece of newPieceList) {
                                 piece.addEventListener("click", (event) => {
                                     let cloneNewPiece;
@@ -797,6 +911,7 @@ function movePiece(posibleMoves, pieceMoved) {
                                     showSelection[0].classList.add("hidden");
                                     newPiece[0].classList.add("hidden");
 
+                                    //Rearrange the classes and the events for the new piece added
                                     totalPieces = document.getElementsByClassName("piece");
                                     whitePiecesList = document.getElementsByClassName("white-piece");
                                     blackPiecesList = document.getElementsByClassName("black-piece");
@@ -805,6 +920,7 @@ function movePiece(posibleMoves, pieceMoved) {
                                         element.addEventListener("dragstart", manageMove);
                                     }
 
+                                    //Change turn after replacing the new piece
                                     if (element.firstElementChild.classList.contains("black-piece")) {
                                         whiteTurn();
                                     } else if (element.firstElementChild.classList.contains("white-piece")) {
@@ -814,6 +930,7 @@ function movePiece(posibleMoves, pieceMoved) {
                             }
                         }
                     } else {
+                        //Change turn if a Pawn was moved
                         if (pieceMoved.classList.contains("black-piece")) {
                             whiteTurn();
                         } else if (pieceMoved.classList.contains("white-piece")) {
@@ -821,6 +938,7 @@ function movePiece(posibleMoves, pieceMoved) {
                         }
                     }
                 } else {
+                    //Change turn if a piece (Horse - Rook - Bishop - Queen - King) was moved
                     if (pieceMoved.classList.contains("black-piece")) {
                         whiteTurn();
                     } else if (pieceMoved.classList.contains("white-piece")) {
@@ -831,6 +949,7 @@ function movePiece(posibleMoves, pieceMoved) {
         });
     }
 
+    //Once the piece was moved disable all the squares to prepare for the next turn
     pieceMoved.addEventListener("dragend", () => {
         for (let element of posibleMoves) {
             element.classList.remove("dropzone");
@@ -839,11 +958,13 @@ function movePiece(posibleMoves, pieceMoved) {
     });
 }
 
+//Manage the score of both sides with the pieces that were eaten each turn
 function manageScore(removedPiece, newPieceFlag) {
     let piece = removedPiece.classList[0];
     let colorEated = removedPiece.classList[2];
     let colorMoved;
 
+    //Determine if a new piece is being added to the board wich would change the score
     if (newPieceFlag == false) {
         if (colorEated == "white-piece") {
             colorMoved = "black";
@@ -862,6 +983,7 @@ function manageScore(removedPiece, newPieceFlag) {
         }
     }
 
+    //Add the piece that was eated to the corresponding score
     switch (piece) {
         case "w-pawn":
         case "b-pawn":
@@ -938,6 +1060,7 @@ function manageScore(removedPiece, newPieceFlag) {
     }
 }
 
+//Calculates the current Score of both sides and show who is winning at the moment
 function calculateCurrentScore() {
     let currentWhiteScore = 0;
     let currentBlackScore = 0;
@@ -949,16 +1072,19 @@ function calculateCurrentScore() {
     currenWhitePieces.innerHTML = "";
     currentBlackPieces.innerHTML = "";
 
+    //Calculates the current Score for White
     for (let i = 0; i < whiteScore.length; i++) {
         calculateEatenPieces(whiteScore[i], "white");
         currentWhiteScore = currentWhiteScore + Math.floor(whiteScore[i]);
     }
 
+    //Calculates the current Score for Black
     for (let i = 0; i < blackScore.length; i++) {
         calculateEatenPieces(blackScore[i], "black");
         currentBlackScore = currentBlackScore + Math.floor(blackScore[i]);
     }
 
+    //Shows on the score board how much points of difference are
     if (currentWhiteScore == currentBlackScore) {
         currentWhiteSum.innerHTML = "";
         currentBlackSum.innerHTML = "";
@@ -971,6 +1097,7 @@ function calculateCurrentScore() {
     }
 }
 
+//Add a visual sign of the pieces that each player have eaten
 function calculateEatenPieces(piecesEatenKey, colorMoved) {
     let scoreToModify = document.getElementById(`${colorMoved}${"-score"}`).firstElementChild;
 
@@ -1021,13 +1148,14 @@ function calculateEatenPieces(piecesEatenKey, colorMoved) {
     }
 }
 
-//*window.scrollTo(0, document.body.scrollHeight);
+//Register every move on the table to show the history of the moves on the game
 function registerMove(target, typeOfMove) {
     let pieceMoved = target.firstElementChild.classList[0];
     let colorMoved = target.firstElementChild.classList[2];
     let targetSquare = target.id.toLowerCase();
     let turnTable = document.getElementsByClassName("current-moves");
 
+    //Creates a new row on the table each turn (white and black played)
     if (turnTable[0].childElementCount == 0) {
         createNewRow();
     }
@@ -1040,11 +1168,14 @@ function registerMove(target, typeOfMove) {
     let whiteMoves = document.getElementById(`${lastTurn}${".-w"}`);
     let blackMoves = document.getElementById(`${lastTurn}${".-b"}`);
 
+    //Creates the message to explaing in the table the moved made by each player
     let moveString = "";
     moveString = createStringMovement(pieceMoved, targetSquare);
 
+    //Change the message depending on the type of the move (Move - Eat - Short castle - Long castle)
     switch (typeOfMove) {
         case "move":
+            //Normal move of piece
             if (colorMoved == "white-piece") {
                 whiteMoves.innerHTML = moveString;
             } else {
@@ -1054,6 +1185,7 @@ function registerMove(target, typeOfMove) {
             break;
 
         case "eat":
+            //Normal move of piece + X that indicates a Eating move
             let changeOnString = moveString.slice(moveString.length - 2);
             changeOnString = moveString.replace(changeOnString, "x" + changeOnString);
 
@@ -1066,6 +1198,7 @@ function registerMove(target, typeOfMove) {
             break;
 
         case "shortCastle":
+            //Message changed to O-O wich indicates short castle
             if (colorMoved == "white-piece") {
                 whiteMoves.innerHTML = "O-O";
             } else {
@@ -1075,6 +1208,7 @@ function registerMove(target, typeOfMove) {
             break;
 
         case "longCastle":
+            //Message changed to O-O-O wich indicates long castle
             if (colorMoved == "white-piece") {
                 whiteMoves.innerHTML = "O-O-O";
             } else {
@@ -1087,12 +1221,15 @@ function registerMove(target, typeOfMove) {
             break;
     }
 
+    //Maintains the scrollbar on the bottom to always show the last move on the table
     turnTable[0].scrollTo(0, turnTable[0].scrollHeight);
 }
 
+//Creates rows on the HTML to show each turn once both players moved
 function createNewRow() {
     let turnTable = document.getElementsByClassName("current-moves");
 
+    //Creates the first row on the table to start the registration
     if (turnTable[0].childElementCount != 0) {
         let lastRow = turnTable[0].lastElementChild;
         let lastTurn = lastRow.firstElementChild.innerHTML;
@@ -1120,6 +1257,7 @@ function createNewRow() {
         newRow.appendChild(newBlackMove);
         turnTable[0].appendChild(newRow);
     } else {
+        //Creates a new row on the table to continue the registration
         let newRow = document.createElement("div");
         let newTurn = document.createElement("span");
         let newWhiteMove = document.createElement("div");
@@ -1139,6 +1277,7 @@ function createNewRow() {
     }
 }
 
+//Define the message that is going to be showed with the visual sign of the piece moved and the square
 function createStringMovement(pieceName, moveMade) {
     var moveString = "";
 
@@ -1204,18 +1343,22 @@ function createStringMovement(pieceName, moveMade) {
     return moveString;
 }
 
+//Enables the turn for white
 function whiteTurn() {
     manageTurnClasses("white");
     countdown("white", seconds[1], minutes[1]);
 }
 
+//Enables the turn for black
 function blackTurn() {
     manageTurnClasses("black");
     countdown("black", seconds[0], minutes[0]);
 }
 
+//Manage the classes of the pieces and the Turn card for each player depending on the turn
 function manageTurnClasses(turn) {
     if (turn == "black") {
+        //Enables all black pieces to move / disable white pieces and Stops the white timer
         clearInterval(whiteTimer);
         turnCard[1].classList.remove("white-turn");
         turnCard[0].classList.add("black-turn");
@@ -1228,6 +1371,7 @@ function manageTurnClasses(turn) {
             element.classList.remove("white-turn");
         }
     } else if (turn == "white") {
+        //Enables all white pieces to move / disable black pieces and Stops the black timer
         clearInterval(blackTimer);
         turnCard[0].classList.remove("black-turn");
         turnCard[1].classList.add("white-turn");
@@ -1243,10 +1387,12 @@ function manageTurnClasses(turn) {
     }
 }
 
+//Enables the timer for each player depending on the current turn and ends the game if the timer reaches 0
 function countdown(selector, secsLeft, minsLeft) {
     var mins = minsLeft;
     var secs = secsLeft;
 
+    //Countdown minutes/seconds
     if (secs.innerHTML != 0 || mins.innerHTML != 0) {
         var timer = setInterval(() => {
             if (secs.innerHTML == 0) {
@@ -1262,6 +1408,7 @@ function countdown(selector, secsLeft, minsLeft) {
                 secs.innerHTML = secs.innerHTML - 1;
             }
 
+            //If the timer reaches 0 / Triggers - Game is over
             if (secs.innerHTML == 0 && mins.innerHTML == 0) {
                 gameOver(selector);
                 clearInterval(timer);
@@ -1276,6 +1423,7 @@ function countdown(selector, secsLeft, minsLeft) {
     }
 }
 
+//Enable the message for the winner, disable all the pieces, and stop both of the timers - Game is over
 function gameOver(loser) {
     let gameOver = document.getElementsByClassName("game-over-section");
     gameOver[0].classList.remove("hidden");
@@ -1295,9 +1443,11 @@ function gameOver(loser) {
     }
 }
 
+//Section to recolor the pieces/board if the player click on any of the recolors on the bottom of the screen
 const recolorPiece = document.getElementsByClassName("recolor");
 const recolorBoard = document.getElementsByClassName("recolor-board");
 
+//Recolor the pieces based on the choice of the player
 for (let element of recolorPiece) {
     element.addEventListener("click", (event) => {
         let totalPieces = document.getElementsByClassName("piece");
@@ -1310,6 +1460,7 @@ for (let element of recolorPiece) {
     });
 }
 
+//Recolor the board based on the choice of the player
 for (let element of recolorBoard) {
     element.addEventListener("click", (event) => {
         let blackSquares = document.getElementsByClassName("black-square");
